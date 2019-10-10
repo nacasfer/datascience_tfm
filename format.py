@@ -12,7 +12,7 @@ import pandas as pd
 
 ## --  Parametros globales -- ##
 
-path='/media/natalia/DATOS/DATA/Natalia/ML/EstudioCorrelaciVariables/TOTALVariants.txt'
+path='../TOTALVariants.txt'
 header=0
 fields=['Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype','maf','gene',
         'causal','SIFT_score','ljb23_sift','sift','Polyphen2_HDIV_score',
