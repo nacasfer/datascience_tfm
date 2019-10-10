@@ -1,0 +1,51 @@
+##########################################################################################################
+Llamada a R para hacer funcion par
+%% R
+par(mfrow=c(1,2))
+plot(0, 0)
+plot(0, 0)
+
+
+##########################################################################################################
+ESTUDIAR CORRELACION ENTRE DOS VARIABLES EN PYTHON
+También funciona con valores booleanos. La unica condición es que no haya valores nan.
+
+	import numpy as np
+
+	# Eliminamos filas con nan para hacer la correlacion
+	variantes_DF=variantes_DF[np.isfinite(variantes_DF["SIFT_score"])]
+	variantes_DF=variantes_DF[np.isfinite(variantes_DF["Start"])]
+
+	print (len(variantes_DF["SIFT_score"]))	# imprimimos el tamaño de datos que conservamos
+
+	x=variantes_DF["Start"].values
+	y=variantes_DF["SIFT_score"].values
+
+	print(np.corrcoef(x, y))
+
+	#-- Resultado = 
+	#[[1.        0.0304804]
+	# [0.0304804 1.       ]]
+
+	#La correlacion es 0.034804
+
+	import matplotlib
+	import matplotlib.pyplot as plt
+
+	matplotlib.style.use('ggplot')
+
+	plt.scatter(x, y)
+	plt.show()
+
+
+PARA HACERLO CON TODO EL DF
+
+	df = pd.DataFrame({'a': np.random.randint(0, 50, 1000)})
+	df['b'] = df['a'] + np.random.normal(0, 10, 1000) # positively correlated with 'a'
+	df['c'] = 100 - df['a'] + np.random.normal(0, 5, 1000) # negatively correlated with 'a'
+	df['d'] = np.random.randint(0, 50, 1000) # not correlated with 'a'
+
+	df.corr()
+
+##########################################################################################################
+
