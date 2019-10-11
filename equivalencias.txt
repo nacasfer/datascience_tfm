@@ -1,0 +1,22 @@
+####################################vv
+# La columna Func.refGene es tipo str, se reiterpreta como valores numéricos siguiendo la norma:
+
+exonic = splicing > ncRNA> > UTR5/UTR3 > intron > upstream/downstream > intergenic
+
+Value 	Default precedence 	Explanation 	Sequence Ontology
+exonic 	1 	variant overlaps a coding 	exon_variant (SO:0001791)
+splicing 	1 	variant is within 2-bp of a splicing junction (use -splicing_threshold to change this) 	splicing_variant (SO:0001568)
+ncRNA 	2 	variant overlaps a transcript without coding annotation in the gene definition (see Notes below for more explanation) 	non_coding_transcript_variant (SO:0001619)
+UTR5 	3 	variant overlaps a 5' untranslated region 	5_prime_UTR_variant (SO:0001623)
+UTR3 	3 	variant overlaps a 3' untranslated region 	3_prime_UTR_variant (SO:0001624)
+intronic 	4 	variant overlaps an intron 	intron_variant (SO:0001627)
+upstream 	5 	variant overlaps 1-kb region upstream of transcription start site 	upstream_gene_variant (SO:0001631)
+downstream 	5 	variant overlaps 1-kb region downtream of transcription end site (use -neargene to change this) 	downstream_gene_variant (SO:0001632)
+intergenic 	6 	variant is in intergenic region 	intergenic_variant (SO:0001628)
+
+the "exonic" here refers only to coding exonic portion , but not UTR portion, as there are two keywords (UTR5, UTR3) that are specifically reserved for UTR annotations.
+"splicing" in ANNOVAR is defined as variant that is within 2-bp away from an exon/intron boundary by default, but the threshold can be changed by the --splicing_threshold argument. Before Feb 2013, if "exonic,splicing" is shown, it means that this is a variant within exon but close to exon/intron boundary; this behavior is due to historical reason, when a user requested that exonic variants near splicing sites be annotated with splicing as well. However, I continue to get user emails complaining about this behavior despite my best efforts to put explanation in the ANNOVAR website with details. Therefore, starting from Feb 2013 , "splicing" only refers to the 2bp in the intron that is close to an exon, and if you want to have the same behavior as before, add -exonicsplicing argument.
+If a variant is located in both 5' UTR and 3' UTR region (possibly for two different genes), then the "UTR5,UTR3" will be printed as the output.
+The term "upstream" and "downstream" is defined as 1-kb away from transcription start site or transcription end site, respectively, taking in account of the strand of the mRNA; the --neargene threshold can be used to adjust this threshold.
+If a variant is located in both downstream and upstream region (possibly for 2 different genes), then the "upstream,downstream" will be printed as the output. In 2011 June version of ANNOVAR, the splicing annotation is improved. If the splicing site is in intron, then all isoforms and the corresponding base change will be printed
+
