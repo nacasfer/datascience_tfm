@@ -23,7 +23,7 @@ Documentation for the project utilities is abailable by cloning this repository.
 The project requires:
 
   * **Linux system** (>= Ubuntu 18.04 LTS system recommended; no other distributions were tested)
-  * **Python** (>=3.7 recommended). Python languaje can be easily installed throug the [anaconda environment] (https://www.anaconda.com/distribution/).
+  * **Python** (>=3.7 recommended). Python languaje can be easily installed throug the [anaconda environment](https://www.anaconda.com/distribution/).
 
 The remaining dependencies can be installed using the included `setup.sh` script. 
 Basic instructions:
