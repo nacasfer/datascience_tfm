@@ -1,0 +1,102 @@
+##########################################################################################################
+Llamada a R para hacer funcion par
+%% R
+par(mfrow=c(1,2))
+plot(0, 0)
+plot(0, 0)
+
+
+##########################################################################################################
+ESTUDIAR CORRELACION ENTRE DOS VARIABLES EN PYTHON
+También funciona con valores booleanos. La unica condición es que no haya valores nan.
+
+	import numpy as np
+
+	# Eliminamos filas con nan para hacer la correlacion
+	variantes_DF=variantes_DF[np.isfinite(variantes_DF["SIFT_score"])]
+	variantes_DF=variantes_DF[np.isfinite(variantes_DF["Start"])]
+
+	print (len(variantes_DF["SIFT_score"]))	# imprimimos el tamaño de datos que conservamos
+
+	x=variantes_DF["Start"].values
+	y=variantes_DF["SIFT_score"].values
+
+	print(np.corrcoef(x, y))
+
+	#-- Resultado = 
+	#[[1.        0.0304804]
+	# [0.0304804 1.       ]]
+
+	#La correlacion es 0.034804
+
+	import matplotlib
+	import matplotlib.pyplot as plt
+
+	matplotlib.style.use('ggplot')
+
+	plt.scatter(x, y)
+	plt.show()
+
+
+PARA HACERLO CON TODO EL DF
+
+	df = pd.DataFrame({'a': np.random.randint(0, 50, 1000)})
+	df['b'] = df['a'] + np.random.normal(0, 10, 1000) # positively correlated with 'a'
+	df['c'] = 100 - df['a'] + np.random.normal(0, 5, 1000) # negatively correlated with 'a'
+	df['d'] = np.random.randint(0, 50, 1000) # not correlated with 'a'
+
+	df.corr()
+
+
+##########################################################################################################
+# Alelo Ref es uno, pero hay 2 cols de alelo Alt, rellenamos nan de una con otra y unificamos valores. 
+# Cuando no coincidan duuplicamos la fila. Primero separamos las distintas variantes de Alt_IR ('|') y quitamos los duplicados
+print(variantes_DF['Alt_IR'])
+variantes_DF['Alt_IR']=variantes_DF['Alt_IR'].str.strip('|')
+
+def borra_dups(row,c):
+    if len (row.split(c)) ==1:
+        return row
+    else:
+        dic={}
+        for elem in row.split(c):
+            dic[elem]=0          
+        return list(dic.keys())
+
+
+variantes_DF['Alt_IR']=variantes_DF['Alt_IR'].apply(lambda row : borra_dups(str(row),'|')) 
+
+
+
+##########################################################################################################
+HotEncoding para var ordinales
+
+You should use the OneHotEncoder transformer with the categorical variables, and leave the ordinal variable untouched:
+
+>>> import pandas as pd
+>>> from sklearn.preprocessing import OneHotEncoder
+>>> df = pd.DataFrame({'quality': [1, 2, 3], 'city': [3, 2, 1], columns=['quality', 'city']}
+>>> enc = OneHotEncoder(categorical_features=[False, True])
+>>> X = df.values
+>>> enc.fit(X)
+>>> enc.transform(X).todense()
+matrix([[ 0.,  0.,  1.,  1.],
+        [ 0.,  1.,  0.,  2.],
+        [ 1.,  0.,  0.,  3.]])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
