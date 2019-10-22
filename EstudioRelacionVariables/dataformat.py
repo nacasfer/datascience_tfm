@@ -82,7 +82,7 @@ def formato_datos_origen(variantes_DF):
     
     # Transformamos cadenas str en numericos ordinales segun tabla de equivalencias. Cuando haya dos campos juntos afectando una variante se toma el campo de mayor grado
     #           Func.refGene y Func.ensGene son equivlentes. se rellena una a partir de la otra y se borra
-    dic={'':float('NaN'),'nan':float('NaN'),'exonic':1.,'splicing':1.,'ncRNA':2.,'UTR5':3.,'UTR3':3.,'intronic':4.,'upstream':5.,'downstream':5.,'intergenic':6.}
+    dic={'':float('NaN'),'nan':float('NaN'),'exonic':6.,'splicing':6.,'ncRNA':5.,'UTR5':4.,'UTR3':4.,'intronic':3.,'upstream':2.,'downstream':2.,'intergenic':1.}
     
     variantes_DF['Func.refGene']=variantes_DF['Func.refGene'].str.replace(';',',').str.replace('_',',')
     variantes_DF['Func.refGene']=[categoria_por_valor(str(row).split(',') ,dic)  for row in variantes_DF['Func.refGene'] ] 
@@ -97,7 +97,11 @@ def formato_datos_origen(variantes_DF):
     del variantes_DF['Func.ensGene']
     
     #           ExonicFunc.refGene y ExonicFunc.ensGene son equivlentes. se rellena una a partir de la otra y se borra
-    dic={'':float('NaN'),'nan':float('NaN'),'frameshift insertion':1.,'frameshift deletion':2.,'frameshift block substitution':3.,'stopgain':4.,'stoploss':5.,'nonframeshift insertion':6.,'nonframeshift deletion':7.,'dnonframeshift block substitution':8.,'nonsynonymous SNV':9.,'synonymous SNV':10.,'unknown':11.}
+    dic={'':float('NaN'),'nan':float('NaN'),'unknown':float('NaN'),
+'synonymous SNV':1.,'nonsynonymous SNV':2.,
+'nonframeshift insertion':3.,'nonframeshift deletion':3.,'nonframeshift block substitution':3.,
+'frameshift insertion':4.,'frameshift deletion':4.,'frameshift block substitution':4.,
+'stopgain':5.,'stoploss':5.}
     
     variantes_DF['ExonicFunc.refGene']=variantes_DF['ExonicFunc.refGene'].str.replace('_','').str.replace(':',',').str.replace(';',',').str.replace('_',',') 
     variantes_DF['ExonicFunc.refGene']=[categoria_por_valor(str(row).split(',') ,dic)  for row in variantes_DF['ExonicFunc.refGene'] ] 
@@ -125,8 +129,11 @@ def formato_datos_origen(variantes_DF):
     
     #           function tiene su propia nomenclatura, con los campos separados por '|'
     
-    dic={'':float('NaN'),'nan':float('NaN'),'stoploss':4.,'nonsense':4.,'missense':3.,'frameshiftInsertion':3.,'frameshiftDeletion':3.,'frameshiftBlockSubstitution':3.,
-         'nonframeshiftInsertion':2.,'nonframeshiftDeletion':2.,'nonframeshift':2.,'nonframeshiftBlockSubstitution':2,'synonymous':1.,'unknown':float('NaN')}
+    dic={'':float('NaN'),'nan':float('NaN'),'unknown':float('NaN'),
+'synonymous':1.,'missense':2.,
+'nonframeshiftInsertion':3.,'nonframeshiftDeletion':3.,'nonframeshift':3.,'nonframeshiftBlockSubstitution':3.,
+'frameshiftInsertion':4.,'frameshiftDeletion':4.,'frameshiftBlockSubstitution':4.,
+'nonsense':5.,'stoploss':5.,}
     
     variantes_DF['function']=variantes_DF['function'].str.strip('|')
     variantes_DF['function']=[categoria_por_valor(str(row).split('|') ,dic)  for row in variantes_DF['function'] ] 

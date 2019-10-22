@@ -231,6 +231,28 @@ The absolute values of the scores represent -log p-values under a null hypothesi
 
 
 
+################## 
+# NAT, OBDU , IRENE Y LAURA (orden de importancia de primero a ultimo) > a <
+
+Stop Loss	1
+Stop Gain	1
+nonsense	1
+
+Frameshift insertion	2
+frameshift deletion
+framshift block substitution	2
+splicing	2
+
+nonframeshift insertion	3
+nonframeshift deletion	3
+nonframshift block substitution	3
+
+nonsynonimous SNP	4
+missense	4
+
+synonimous SNV	5
+
+
 
 
 

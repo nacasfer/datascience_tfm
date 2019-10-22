@@ -23,7 +23,7 @@ fields=['Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype','maf','
         'PROVEAN_score','CADD_phred','phyloP20way_mammalian',
         'SiPhy_29way_logOdds','FATHMM_score','CLNSIG','allele_coverage','function',
         'grantham','5000Exomes','FATHMM','clinvar','phylop','gnomAD_genome_ALL','1000g2015aug_all','1000G_ALL',
-        'ExAC_ALL','AF','AF_male','AF_female','PopFreqMax','alelos']
+        'ExAC_ALL','AF','PopFreqMax','alelos']
       
 
 
