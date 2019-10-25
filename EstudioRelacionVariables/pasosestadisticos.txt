@@ -1,0 +1,43 @@
+En primer lugar vamosa estudiar la relacion entre variables iguales. Es decir, predictores que surgen de distintas bases de ddatos y deberian tener una relacion lineal perfecta
+pero que por venir de distintas fuentes pueden ser ligeramente distintas.
+
+Para ello empezamos estudiando al relacion lineal por medio del coef de correlacion de pearson.
+Tambien estudiamos a la vez la correlacion no lineal de Spearman  y la covarianza
+ Hay que eliminar valores nulos para poder calcular las correlaciones.
+Cuando dos variables esten correlacionadas una se empleara para rellenar la otra,
+y la resultante se compara con el resto de variables del grupo, hasta generar una vriable que contenga todo elg rupo.Se van rellenando de 
+variables con mayor correlacion a menor
+Las variables qeu se estudian entre si dos a dos son(En mayuscula se indica el nombre de la variable que contiene el grupo):
+
+FRECUENCIA_t:
+maf
+gnomAD_genome_ALL	
+1000g2015aug_all
+1000G_ALL
+ExAC_ALL
+AF
+PopFreqMax
+5000Exomes
+--
+
+SIFT_t:
+SIFT_score
+sift
+ljb23_sift
+--
+POLYOHEN_t:
+Polyphen2_HDIV_score
+Polyphen2_HVAR_score
+polyphen
+--
+PHYLOP_t:
+phyloP20way_mammalian
+phylop
+--
+FATHMM_t:
+FATHMM_score
+FATHMM
+
+
+
+

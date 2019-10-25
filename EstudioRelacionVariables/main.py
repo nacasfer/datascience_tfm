@@ -8,6 +8,8 @@ Created on Wed Oct  9 14:47:58 2019
 ## --   Modulos -- ##
 import pandas as pd
 import dataformat as dfmt
+import estatistics as est
+
 #import functions as fc
 
 
@@ -41,6 +43,13 @@ variantes_DF=pd.read_csv(path , sep='\t',
 ###
 ### -- Formateo de los datos
 variantes_DF=dfmt.formato_datos_origen(variantes_DF)
+
+
+###
+### -- Aplicacion estadisticas para completar valores nulos y reducir dimensionalidad
+
+
+variantes_DF.to_csv('VARIANTES', sep='\t', index = False)
 
 
 print(variantes_DF.dtypes)
