@@ -7,7 +7,7 @@ plot(0, 0)
 
 
 ##########################################################################################################
-ESTUDIAR CORRELACION ENTRE DOS VARIABLES EN PYTHON
+ESTUDIAR CORRELACION ENTRE DOS VARIABLES EN PYTHON (PEARSON)
 También funciona con valores booleanos. La unica condición es que no haya valores nan.
 
 	import numpy as np
@@ -36,6 +36,12 @@ También funciona con valores booleanos. La unica condición es que no haya valo
 
 	plt.scatter(x, y)
 	plt.show()
+
+(SPEARMAN)
+
+
+(COVARIANZA)
+
 
 
 PARA HACERLO CON TODO EL DF
