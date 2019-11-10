@@ -108,7 +108,9 @@ unknown			NaN
 ####################################
 # Grantham score
 
-The Grantham score attempts to predict the distance between two amino acids, in an evolutionary sense. A lower Grantham score reflects less evolutionary distance. A higher Grantham score reflects a greater evolutionary distance. Higher Grantham scores are considered more deleterious:
+The Grantham score attempts to predict the distance between two amino acids, in an evolutionary sense. 
+A lower Grantham score reflects less evolutionary distance. 
+A higher Grantham score reflects a greater evolutionary distance. Higher Grantham scores are considered more deleterious:
 
     The more distant two amino acids are, the less likely the amino acids are to be substituted with one another.
 
@@ -159,7 +161,8 @@ represernta pvalores
 
 
 ####################################
-# phyloP scores measure evolutionary conservation at individual alignment sites. Interpretations of the scores are compared to the evolution that is expected under neutral drift.
+# phyloP 
+scores measure evolutionary conservation at individual alignment sites. Interpretations of the scores are compared to the evolution that is expected under neutral drift.
 Nos quedamos con los valores maximos porque 
 
     Positive scores — Measure conservation, which is slower evolution than expected, at sites that are predicted to be conserved.
@@ -251,6 +254,70 @@ nonsynonimous SNP	4
 missense	4
 
 synonimous SNV	5
+
+################## 
+# Mutation Taster
+
+If an alteration is a 'true' SNP (as confirmed by the existence of each of the three genotypes AA, AB, BB in the HapMap data or by presence in TGP in homozygous state in > 4 cases), it is automatically predicted to be a polymorphism. Alterations causing a premature termination codon and ultimately leading to nonsense-mediated mRNA deday (NMD) are automatically assigned the 'disease causing' status. In both cases, the Bayes classifier is run nevertheless and the probability for the prediction that was automatically made is shown. Scores below 0.5 hence indicate, that our classifier comes to a different conclusion. A few SNPs listed in HapMap introduce premature stop codons and will cause NMD; these are likely to be mistaken for disease mutations.
+We advise you not to exclude an alteration due to a dbSNP ID. Many SNPs from dbSNP are not validated and some are even known to be disease causing variants (e.g. rs28939070 is responsible for Trichorhinophalangeal Syndrome, type I).
+Since we used 'true' SNPs from the 1000 Genomes Project as our polymorphism data set, we did not include Genotype data from the 1000 Genomes Project (and HapMap frequencies either) in the training and optimisation of MutationTaster nor in the comparison with other applications.
+MutationTaster employs a Bayes classifier to predict the disease potential of an alteration (Schwarz et al., 2010).. 
+The output of three different models for synonymous/intronic changes, single amino acid changes and complex changes is entered into the Bayesian model. 
+The prediction of disease causing or polymorphism is either from the Bayesian model or based on external data, which is noted in the classification. 
+Pipeline 4 also provides the prediction confidence in parentheses, expressed as a 0 to 1 value with values closer to 1 indicating higher confidence.
+
+################## 
+# PROVEAN
+PROVEAN was developed to predict whether a protein sequence variation affects protein function. PROVEAN scores range from −14 to 14 
+PROVEAN introduces a delta alignment score based on the reference and variant versions of a protein query sequence with respect to sequence homologs collected from the NCBI NR protein database through BLAST. The PROVEAN score distribution of a set of 58K UniProt human protein variants with known functional outcome is shown in Figure 2.
+
+For maximum separation of the deleterious and neutral variants for all 4 classes of human protein variants, the default score threshold is currently set at -2.5 for binary classification (i.e. deleterious vs neutral).
+
+
+################## 
+# CADD 
+CADD es un acrónimo formado por las iniciales de Combined Annotation- Dependent Depletion. Es una herramienta informática que nos permite evaluar cuan deletéreas son las variantes de un único nucleótido (SNP), deleciones e inserciones en el genoma humano.
+La Deriva genética y la Selección natural, entre otros, pueden originar la fijación de alelos en determinadas poblaciones. CADD es una herramienta que trabaja contrastando la información de los alelos que se han fijado, o que han sobrevivido a la selección natural, con variantes simuladas. La forma de expresar el resultado es lo que se denomina el c-score, de manera que mayores valores de c-score sugieren un mayor efecto deletéreo de dichos alelos.1​
+Usually, a scaled CADD score of 20 means that a variant is amongst the top 1% of deleterious variants in the human genome.
+A scaled CADD score of 30 means that the variant is in the top 0.1% and so forth.
+
+The CADD score combines information from 63 different annotations including PhastCons, GERP, PhyloP, SIFT and PolyPhen, using a support vector machine classifier 
+(Kircher et al, 2013). It measures deleteriousness by using observed variant frequency as the basis for its calculation. 
+The C score ranges from 1 to 99, with a higher score indicating greater deleteriousness. 
+Values >= 10 are predicted to be the 10% most deleterious substitutions, >= 20 indicate the 1% most deleterious.
+
+################## 
+# SIPHY
+SiPhy scores are from dbNSFP, and are on the log odds scale, with most scores ranging between 0 and 20. Higher scores indicate higher conservation
+cOMO NO HAY UN MÁXIMO, no los vamos a normalizar, ni a usar para rellenar otros nan.
+
+################## 
+# POLYPHEN
+PolyPhen predicts the possible impact of an amino acid substitution on the structure and function of a human protein using physical and comparative considerations, 
+including interference with ligand binding sites (Adzhubei et al., 2010). It produces one of three calls for non-synonymous variants: benign, possibly damaging, 
+or probably damaging. The output is a 0 to 1 score.
+
+################## 
+# SIFT 
+Sift scores assess tolerance of amino-acid changes in protein function, by aligning homologous protein sequences using PSI-BLAST.. SIFT p-values below 0.05 indicate that the change is likely deleterious. Lower scores indicate damaging variants (0 to 1 scale).
+
+################## 
+# fathmm
+
+The functional scores for individual mutations from FATHMM-MKL are in the form of a single p-value, ranging from 0 to 1. Scores above 0.5 are deleterious, but in order to highlight the most significant data in COSMIC, only scores ≥ 0.7 are classified as 'Pathogenic'.
+his filter can be added to filter chains in Ion Reporter™ Software to calculate Functional Analysis through Hidden Markov Models (FATHMM) Scores for coding variants, nonsynonymous single-nucleotide variants (nsSNVs), and noncoding variants.
+
+Filter conditions include the ability to set a range from 0.0 to 1.0 for the score, to include or exclude boundary values in the ranges, and to include or exclude unannotated variants in filtered analysis results.
+
+The filter calculates FATHMM scores for coding variants, nsSNVs, and noncoding variants. 
+
+fathmm _SCORE
+If a score is smaller than -1.5 the corresponding NS is predicted as "D(AMAGING)"; otherwise it is predicted as "T(OLERATED)". All the four missense variants were predicted as tolerated by FATHMM. The method is less well known compared to SIFT and PolyPhen, but in our experience it works really well and better than SIFT/PolyPhen.
+Ocurre lo mimo que ocurria con shipy
+
+
+
+
 
 
 
