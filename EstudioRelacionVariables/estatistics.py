@@ -8,6 +8,7 @@ Created on Wed Oct  9 14:47:58 2019
 ## --   Modulos -- ##
 import pandas as pd
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 from scipy.stats import spearmanr
 from scipy import stats
 from sklearn.linear_model import LinearRegression
