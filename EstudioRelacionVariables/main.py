@@ -47,12 +47,14 @@ variantes_DF=dfmt.formato_datos_origen(variantes_DF)
 
 ###
 ### -- Aplicacion estadisticas para completar valores nulos y reducir dimensionalidad
+variantes_DF_reducido=est.relleno_y_reduccion(variantes_DF)
 
 
-variantes_DF.to_csv('VARIANTES', sep='\t', index = False)
+
+#variantes_DF.to_csv('VARIANTES', sep='\t', index = False)
 
 
-print(variantes_DF.dtypes)
+#print(variantes_DF.dtypes)
 
 
 

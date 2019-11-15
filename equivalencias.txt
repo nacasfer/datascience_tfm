@@ -79,14 +79,14 @@ For submissions without an interpretation of clinical significance. The primary 
 Tras estudiar la bibliografía disponible y valorar la experiencia y conocimiento sobre el dominio del problema, se decide transformar esta variable en una variable ordinal
 siguiendo la tabla expuest a cotinuación:
 Puntuacion	Categoría
--1		Bening
--0.75		Lik.Ben, Benign/Lik.Ben
--0.5		protective
-0		not provider, other, uncert. signif, conflict. data
-0.5		affects,association 
-0.75		risk_factor,drug response
-0.9		Lik.Pathog
-1		Pathogenic, Pathogenic/Lik.Pathog
+1	-1		Bening
+2	-0.75		Lik.Ben, Benign/Lik.Ben
+3	-0.5		protective
+0	0		not provider, other, uncert. signif, conflict. data
+4	0.5		affects,association 
+5	0.75		risk_factor,drug response
+6	0.9		Lik.Pathog
+7	1		Pathogenic, Pathogenic/Lik.Pathog
 
 ####################################
 # La columna function se trnsforma en ordinal siguinedo la tabla:
@@ -320,7 +320,22 @@ Ocurre lo mimo que ocurria con shipy
 
 
 
-
+df=pd.read_csv('VARIANTES', sep='\t' ,header =0, 
+               dtype={'Chr':'object','Start':'int64','Ref':'object','Alt_Annovar':'object',
+                      'Alt_IR':'object','avsnp147':'object','genotype':'object',
+                      'gene':'object','causal':'bool','alelos':'float64',
+                      'maf':'float64',
+                      'SIFT_score':'float64','sift':'float64',
+                      'Polyphen2_HDIV_score':'float64','Polyphen2_HVAR_score':'float64','polyphen':'float64',
+                      'MutationTaster_score':'float64','grantham':'float64','FATHMM':'float64',
+                      'PROVEAN_score':'float64','CADD_phred':'float64','phyloP20way_mammalian':'float64',
+                      'SiPhy_29way_logOdds':'float64','FATHMM_score':'float64','phylop':'float64',
+                      'Func.refGene':'float64','ExonicFunc.refGene':'float64','function':'float64','clinvar':'float64',
+                      'allele_coverage':'object',
+                      'gnomAD_genome_ALL':'float64','1000g2015aug_all':'float64',
+                      '1000G_ALL':'float64','ExAC_ALL':'float64','AF':'float64','PopFreqMax':'float64',
+                      'ljb23_sift':'float64','5000Exomes':'float64'},
+                      low_memory=False)
 
 
 

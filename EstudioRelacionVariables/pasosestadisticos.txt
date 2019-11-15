@@ -61,22 +61,51 @@ pero un pvalor significativo ~ 0) la segunda no presenta un coeficiente elevado 
 y dado que la significancia de la relacion negativa de estas dos variables es es grande (pvalor ~9.192622145079578e-271), emplearemos una para rellenar los valores nan de la otra
 y posteriormente la resultante de ambas para rellenar los de phylop
 
-SIFT_t: SIFT_score	sift 	 ljb23_sift 
-POLYPHEN_t :  Polyphen2_HDIV_score  polyphen	Polyphen2_HVAR_score
-PHYLOP_t: phyloP20way_mammalian	phylop + FATHMM + FATHMM_score
 
 Estandarizamos la columna provean. [-14,+14], CADD [0, 99], phylop [-20 , 30], grantham [5, 215]
 Las columnas 'SIFT_score', 'sift','ljb23_sift','Polyphen2_HDIV_score', 'Polyphen2_HVAR_score', 'polyphen','phyloP20way_mammalian','phylop',
            'MutationTaster_score', 'PROVEAN_score', 'CADD_phred', 'FATHMM','grantham'
 ya tienen rangos [0, 1]
 
-Las columnas phyloP20way_mammalian, SiPhy_29way_logOdds, FATHMM_score no tienen un rango determinado, por lo que no deberíamos estandarizar esos datos y constituirán vriables en si mismas.
+Las columnas phyloP20way_mammalian, SiPhy_29way_logOdds, FATHMM_score no tienen un rango determinado, 
+por lo que no deberíamos estandarizar esos datos y constituirán vriables en si mismas.
+Resulta muy extraño que la relación entre FATHMM y FATHMM_score es muy muy pequeña, posibemente por el hecho de que una está estandarizada y 
+la otra no tiene límite superior. Aunque supuestamente on preictores equivalentes, desconozco la razón de esta diferencia entre las bases de datos empleadas para anotar.
 
+Tras el estudio de las correlaciones, se determina que las relaciones para rellenar nan serán:
+SIFT_t:[SIFT_score <- sift <- 	 ljb23_sift] (modelo r.lineal) <- PROVEAN (modelo r. logarítmica)
+POLYPHEN_t :polyphen <- Polyphen2_HDIV_score <- Polyphen2_HVAR_score <- CADD_phred
+PHYLOP_t:phylop <- phyloP20way_mammalian	<- [ FATHMM <- FATHMM_score] <- SiPhy_29way_logOdds
 
-
+Ojo, PROVEAN lo metemos con modelo reg logaritmica xq no teine buen coef de pearson pero sí de spearman, lo que implica que son multilineares, no linares
 
 --
+En el caso de las variables ordinales, y según la definición de los propios coeficientes, se puede aplicar igualmente, pero los modelos empleados para rellenar los nan deben ser de clasificación y no de predicción.
+
+
 'Func.refGene', 'ExonicFunc.refGene', 'function', 'clinvar',
+
+
+
+
+
+
+
+
+
+
+#######################
+
+
+
+
+
+
+
+
+
+
+
 
 
 

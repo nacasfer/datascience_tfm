@@ -114,9 +114,10 @@ def formato_datos_origen(variantes_DF):
     del variantes_DF['ExonicFunc.ensGene']
     
     #           CLNSIG y clinvar son equivalentes. se rellena una a partir de la otra y se borra
-    dic={'':float('NaN'),'nan':float('NaN'),'Benign':-1.,'Benign/Likelybenign':-0.75,'Likelybenign':-0.75,'protective':-0.5,
+    dic={'':float('NaN'),'nan':float('NaN'),'Benign':1.,'Benign/Likelybenign':2,'Likelybenign':2,
+         'protective':3,
           'Uncertainsignificance':0,'Conflictinginterpretationsofpathogenicity':0,'other':0,'notprovided':0,'-':0,
-          'Affects':0.5,'association':0.5,'riskfactor':0.75,'drugresponse':0.75,'Likelypathogenic':0.9,'Pathogenic/Likelypathogenic':1,'Pathogenic':1}
+          'Affects':4,'association':4,'riskfactor':5,'drugresponse':5,'Likelypathogenic':6,'Pathogenic/Likelypathogenic':7,'Pathogenic':7}
     
     variantes_DF['CLNSIG']=variantes_DF['CLNSIG'].str.replace('_','').str.replace(':',',').str.replace(' ','')
     variantes_DF['CLNSIG']=[categoria_por_valor(str(row).split(',') ,dic)  for row in variantes_DF['CLNSIG'] ] 
