@@ -85,20 +85,15 @@ En el caso de las variables ordinales, y según la definición de los propios co
 
 'Func.refGene', 'ExonicFunc.refGene', 'function', 'clinvar',
 
-
-
-
-
-
-
-
+Tan solo vemos una fuerte correlacion entre ExonicFunc.refGene y function. generamos FUNCTION_t a partir de ambas
 
 
 #######################
 
 
 
-
+Como las cariantes son pocas, los eventos positivos (categoria 1) son muy pequeños y a la hora de hacer las particiones de test y entrenamiento, encontraremos muy pocos ventos de este tipo entre los datos,
+por ello vamos a emplear SMOTE para generar más variables de este tipo
 
 
 

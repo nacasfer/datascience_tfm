@@ -9,8 +9,9 @@ Created on Wed Oct  9 14:47:58 2019
 import pandas as pd
 import dataformat as dfmt
 import estatistics as est
+from imblearn.over_sampling import SMOTE
 
-#import functions as fc
+
 
 
 
@@ -32,12 +33,17 @@ fields=['Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype','maf','
 ###
 ### -- Lectura del archivo de variantes
 variantes_DF=pd.read_csv(path , sep='\t', 
-                             header=header,dtype={'causal': 'bool','MutationTaster_score':'float','SIFT_score':'float','Polyphen2_HDIV_score':'float',
-                                                  'Polyphen2_HVAR_score':'float','MutationTaster_score':'float','PROVEAN_score':'float',
-                                                  'CADD_phred':'float','phyloP20way_mammalian':'float','SiPhy_29way_logOdds':'float',
-                                                  'FATHMM_score':'float','gnomAD_genome_ALL':'float','1000g2015aug_all':'float','1000G_ALL':'float',
-                                                  'ExAC_ALL':'float','AF':'float','AF_male':'float','AF_female':'float','PopFreqMax':'float','alelos':'float'},
-                                                  decimal=',', usecols=fields,low_memory=False)
+                             header=header,
+                             dtype={'causal': 'bool',
+                                    'SIFT_score':'float',
+                                    'Polyphen2_HDIV_score':'float','Polyphen2_HVAR_score':'float',
+                                    'MutationTaster_score':'float','PROVEAN_score':'float','CADD_phred':'float',
+                                    'phyloP20way_mammalian':'float',
+                                    'SiPhy_29way_logOdds':'float',
+                                    'FATHMM_score':'float',
+                                    'gnomAD_genome_ALL':'float','1000g2015aug_all':'float','1000G_ALL':'float',
+                                    'ExAC_ALL':'float','AF':'float','PopFreqMax':'float','alelos':'float'},
+                                     decimal=',', usecols=fields,low_memory=False)
 
 
 ###
@@ -50,14 +56,37 @@ variantes_DF=dfmt.formato_datos_origen(variantes_DF)
 variantes_DF_reducido=est.relleno_y_reduccion(variantes_DF)
 
 
-
-#variantes_DF.to_csv('VARIANTES', sep='\t', index = False)
-
-
-#print(variantes_DF.dtypes)
-
+###
+### -- Aumento de la proporcion de eventos exito (variantes causales = 1)
+#!#! print('Numero de variantes pertenecientes a cada categoría:\n',variantes_DF_reducido.causal.value_counts())
+#!#! print('Porcentaje de variantes causales:\n',variantes_DF_reducido.causal.value_counts()[1]/((variantes_DF_reducido.causal.value_counts()[1]+variantes_DF_reducido.causal.value_counts()[0])*100))
 
 
+X = pd.DataFrame(variantes_DF_reducido, columns=['Chr' 'Start' 'Ref' 'Alt_Annovar' 'Alt_IR' 'avsnp147' 'genotype' 'gene' 'polyphen' 'Func.refGene' 'MutationTaster_score' 'allele_coverage' 'grantham' 'clinvar' 'phylop' 'alelos' 'FRECUENCIA_t' 'POBLACION_t' 'SIFT_t' 'POLYPHEN_t' 'PHYLOP_t' 'FUNCTION_t'])
+
+y=variantes_DF_reducido.causal
+
+
+smote = SMOTE(random_state=0)
+X_resampled, y_resampled = smote.fit_sample(X, y)
+
+X_resampled = pd.DataFrame(X_resampled, columns=X.columns)
+X_resampled['causal']=y_resampled
+
+
+
+
+
+
+
+print('Numero de variantes pertenecientes a cada categoría:\n',
+      variantes_DF_reducido.causal.value_counts())
+
+
+
+
+
+#confusion_matrix(y_test, y_pred)
 
 
 

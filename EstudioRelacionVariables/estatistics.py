@@ -6,31 +6,12 @@ Created on Wed Oct  9 14:47:58 2019
 """
 
 ## --   Modulos -- ##
-import pandas as pd
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 from scipy.stats import spearmanr
 from scipy import stats
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score
-
-df=pd.read_csv('VARIANTES', sep='\t' ,header =0, 
-               dtype={'Chr':'object','Start':'int64','Ref':'object','Alt_Annovar':'object',
-                      'Alt_IR':'object','avsnp147':'object','genotype':'object',
-                      'gene':'object','causal':'bool','alelos':'float64',
-                      'maf':'float64',
-                      'SIFT_score':'float64','sift':'float64',
-                      'Polyphen2_HDIV_score':'float64','Polyphen2_HVAR_score':'float64','polyphen':'float64',
-                      'MutationTaster_score':'float64','grantham':'float64','FATHMM':'float64',
-                      'PROVEAN_score':'float64','CADD_phred':'float64','phyloP20way_mammalian':'float64',
-                      'SiPhy_29way_logOdds':'float64','FATHMM_score':'float64','phylop':'float64',
-                      'Func.refGene':'float64','ExonicFunc.refGene':'float64','function':'float64','clinvar':'float64',
-                      'allele_coverage':'object',
-                      'gnomAD_genome_ALL':'float64','1000g2015aug_all':'float64',
-                      '1000G_ALL':'float64','ExAC_ALL':'float64','AF':'float64','PopFreqMax':'float64',
-                      'ljb23_sift':'float64','5000Exomes':'float64'},
-                      low_memory=False)
-
 
 ## --  Funciones -- ##
 
@@ -50,10 +31,10 @@ def estudia_coeficientes (variables,df):
             dic_covar[str(x)+','+str(y)]=np.cov(X, Y)[0,1]      
             corr, Spval = spearmanr(X, Y)
             dic_spearman[str(x)+','+str(y)]=(corr)*10
-        #    print (str(x)+' | '+str(y),
-         #          "\n    Pearson: %.3f"% pearson,Ppval ,       
-          #         "\n    Covariate: %.3f"% np.cov(X, Y)[0,1],
-           #        "\n    Spearman: %.3f"% corr,Spval,)
+      #!#!      print (str(x)+' | '+str(y),
+      #!#!             "\n    Pearson: %.3f"% pearson,Ppval ,       
+      #!#!             "\n    Covariate: %.3f"% np.cov(X, Y)[0,1],
+      #!#!             "\n    Spearman: %.3f"% corr,Spval,)
     del df2
 
     
@@ -75,6 +56,7 @@ def modelo_reg_logaritmica(x,y):
     # Definimos el modelo de prediccion
     reg=LinearRegression()
     # Entrenamos dicho modelo
+    y=np.log(y)
     reg.fit(x,y)
 
     # Hacemos cross validation para conocer las metricas resultantes
@@ -113,7 +95,7 @@ def relleno_y_reduccion(df):
     ### Variables de frecuencia poblacional
     variables=['maf', 'gnomAD_genome_ALL', '1000g2015aug_all', '1000G_ALL', 'ExAC_ALL',
                'AF', 'PopFreqMax', '5000Exomes']
-#    estudia_coeficientes (variables,df)
+    estudia_coeficientes (variables,df)
     
     
     ### Predictores, algunos hay que normalizarlos : 
@@ -132,20 +114,12 @@ def relleno_y_reduccion(df):
     df['phylop']=(df['phylop'] +20)/50
     df['grantham']=(df['grantham']-5)/ 215
     
-#    estudia_coeficientes (variables,df)
-    
-    
-    ### Variables ordinales
-    variables=['Func.refGene', 'ExonicFunc.refGene']#, 'function', 'clinvar']
-  #  df['Func.refGene']=df['Func.refGene'].astype('category')
-  #  df['ExonicFunc.refGene']=df['ExonicFunc.refGene'].astype('category')    
-  #  df['function']=df['function'].astype('category')    
-  #  df['clinvar']=df['clinvar'].astype('category')
- 
-
     estudia_coeficientes (variables,df)
     
     
+    ### Variables ordinales
+    variables=['Func.refGene', 'ExonicFunc.refGene', 'function', 'clinvar']
+    estudia_coeficientes (variables,df)
 
 
     ##############################
@@ -157,7 +131,6 @@ def relleno_y_reduccion(df):
     #!#! print('Nan en maf:',pd.isna(df['1000G_ALL']).sum())
     df['FRECUENCIA_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)     
     #!#! print('Nan en FRECUENCIA_t:',pd.isna(df['FRECUENCIA_t']).sum())
-    df.drop(['maf','5000Exomes'], axis=1)
     
     
     ### Generamos POBLACION_t: A partir de 1000g2015aug_all + gnomAD_genome_ALL + AF + ExAC_ALL + PopFreqMax rellenando sobre nan de 1000G_ALL
@@ -165,7 +138,6 @@ def relleno_y_reduccion(df):
     #!#! print('Nan en 1000G_ALL:',pd.isna(df['1000G_ALL']).sum())
     df['POBLACION_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)     
     #!#! print('Nan en POBLACION_t:',pd.isna(df['POBLACION_t']).sum())
-    df.drop(['1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax'], axis=1)
     
     
     ### Generamos SIFT_t: A partir de [SIFT_score <- sift <- 	 ljb23_sift] (modelo r.lineal) <- PROVEAN (modelo r. logarítmica)
@@ -175,15 +147,13 @@ def relleno_y_reduccion(df):
     variables=['SIFT_previo','PROVEAN_score']
     df['SIFT_t']=modelo_varias_variables(variables,df,modelo_reg_logaritmica) 
     #!#! print('Nan en SIFT_t:',pd.isna(df['SIFT_t']).sum())
-    df.drop(['SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score'], axis=1)
-    
+
     
     ### Generamos POLYPHEN_t: A partir de polyphen <- Polyphen2_HDIV_score <- Polyphen2_HVAR_score <- CADD_phred
     variables=['Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred']
     #!#! print('Nan en Polyphen2_HDIV_score:',pd.isna(df['Polyphen2_HDIV_score']).sum())
     df['POLYPHEN_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)
     #!#! print('Nan en POLYPHEN_t:',pd.isna(df['POLYPHEN_t']).sum())
-    df.drop(['Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred'], axis=1)
     
     
     ### Generamos PHYLOP_t: A partir de phylop <- phyloP20way_mammalian	<- [ FATHMM <- FATHMM_score] <- SiPhy_29way_logOdds
@@ -191,24 +161,29 @@ def relleno_y_reduccion(df):
     #!#! print('Nan en phyloP20way_mammalian:',pd.isna(df['phyloP20way_mammalian']).sum())
     df['PHYLOP_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)
     #!#! print('Nan en PHYLOP_t:',pd.isna(df['PHYLOP_t']).sum())
-    df.drop(['phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds'], axis=1)
     
     
-    ### 
-    
-    
-    
-  #  print (df.dtypes)
-    print(df['Func.refGene'].unique())
-    print(df['function'].unique())
-  #  print(df['clinvar'].unique())
-  #  print(df['ExonicFunc.refGene'].unique())
+    ### Generamos FUNCTIN_t: A partir de 'ExonicFunc.refGene' y  'function'
+    variables=['ExonicFunc.refGene', 'function']
+    #!#! print('Nan en ExonicFunc.refGene:',pd.isna(df['ExonicFunc.refGene']).sum())
+    df['FUNCTION_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)
+    #!#! print('Nan en FUNCTION_t:',pd.isna(df['FUNCTION_t']).sum())
+
+    df['Func.refGene']=df['Func.refGene'].astype('category')
+    df['FUNCTION_t']=df['FUNCTION_t'].astype('category')      
+    df['clinvar']=df['clinvar'].astype('category')
 
 
+    ### Eliminamos columnas sobrantes
+    df=df.drop(columns=['maf','5000Exomes',
+             '1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax',
+             'SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score',
+             'Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred',
+             'phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds',
+             'ExonicFunc.refGene', 'function'])
 
-relleno_y_reduccion(df)
-           
-#antes=pd.isna(df['1000G_ALL']).sum()
+
+    return df
 
 
 

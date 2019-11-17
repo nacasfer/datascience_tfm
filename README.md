@@ -7,7 +7,7 @@ Currently work have been presented as the final project to DataScience master de
 * [Manual pages](#manual)
 * [Some considerations before start](#before)
 * [Installation and requirements](#install)
-* [Analisys of the relation between variables](#relation)
+* [Filling NaN's: Analisys of the relation between variables](#relation)
 * [Clustering](#cluster)
 * [Final prioritization](#prioritization)
 
@@ -49,7 +49,7 @@ Aligment, varint calling and variant VCF annotation steps were perform with foll
 
 ---
 <a name="relation"></a>
-## Analysis of the relation between variables
+## Filling NaN's: Analysis of the relation between variables
 
 
 ---
