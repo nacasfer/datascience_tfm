@@ -80,7 +80,8 @@ PHYLOP_t:phylop <- phyloP20way_mammalian	<- [ FATHMM <- FATHMM_score] <- SiPhy_2
 Ojo, PROVEAN lo metemos con modelo reg logaritmica xq no teine buen coef de pearson pero sí de spearman, lo que implica que son multilineares, no linares
 
 --
-En el caso de las variables ordinales, y según la definición de los propios coeficientes, se puede aplicar igualmente, pero los modelos empleados para rellenar los nan deben ser de clasificación y no de predicción.
+En el caso de las variables ordinales, y según la definición de los propios coeficientes, se puede aplicar igualmente, 
+pero los modelos empleados para rellenar los nan deben ser de clasificación y no de predicción, por loq eu empleamos la regresión logística
 
 
 'Func.refGene', 'ExonicFunc.refGene', 'function', 'clinvar',

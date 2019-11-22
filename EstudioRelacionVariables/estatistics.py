@@ -1,17 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct  9 14:47:58 2019
 @author: natalia castejon fernandez
 """
 
 ## --   Modulos -- ##
+
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 from scipy.stats import spearmanr
 from scipy import stats
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
+#from sklearn.model_selection import GridSearchCV
+import pickle
+import os
+
+
+
+## -- Creacion carpetas para los modelos -- ## 
+
+if not os.path.exists('../modelos/'):
+    os.makedirs('../modelos/')
+
+
 
 ## --  Funciones -- ##
 
@@ -42,6 +55,21 @@ def modelo_reg_lineal(x,y):
     # Definimos el modelo lineal de prediccion
     reg=LinearRegression()
     # Entrenamos dicho modelo
+    reg.fit(x,y)   
+    
+    # Hacemos cross validation para conocer las metricas resultantes
+    MSE=cross_val_score(reg,x,y,cv=10,scoring='neg_mean_squared_error')
+    RMSE= np.sqrt(abs(MSE)).mean()
+    MSE=MSE.mean()
+    # Devolvemos el modelo entrenado,el valor del coef de regresion, el valor de MSE y el de RMSE 
+    return reg, reg.coef_, MSE, RMSE
+
+
+def modelo_reg_logaritmica(x,y):
+    # Definimos el modelo de prediccion
+    reg=LinearRegression()
+    # Entrenamos dicho modelo
+    y=np.log(y)
     reg.fit(x,y)
 
     # Hacemos cross validation para conocer las metricas resultantes
@@ -52,9 +80,9 @@ def modelo_reg_lineal(x,y):
     return reg, reg.coef_, MSE, RMSE
 
 
-def modelo_reg_logaritmica(x,y):
+def modelo_reg_logistica(x,y):
     # Definimos el modelo de prediccion
-    reg=LinearRegression()
+    reg=LogisticRegression()
     # Entrenamos dicho modelo
     y=np.log(y)
     reg.fit(x,y)
@@ -80,6 +108,10 @@ def modelo_varias_variables(variables,df,mod):
         df2=df2[np.isfinite(df2[str(var1)])]
         modelo, reg_coef, MSE, RMSE=mod(df2[[principal]],df2[str(var1)])    
         
+        # Guardamos el modelo
+        filename = '../modelos/'+str(principal)+'-'+str(var1)+'-modelo.sav'
+        pickle.dump(modelo, open(filename, 'wb'))     
+            
         #modelo, reg_coef, MSE, RMSE=modelo_reg_lineal(df2[[principal]],df2[str(var1)])    
         df[principal]=[modelo.predict([[df.loc[i,str(var1)]]])[0] if (str(row) in ['nan','']) & (np.isfinite(df.loc[i,str(var1)])) else vale_valor(row) for  i,row in enumerate(df[principal])] 
     #!#! print('Tras',var1,':', pd.isna(df[principal]).sum())   
@@ -166,6 +198,7 @@ def relleno_y_reduccion(df):
     ### Generamos FUNCTIN_t: A partir de 'ExonicFunc.refGene' y  'function'
     variables=['ExonicFunc.refGene', 'function']
     #!#! print('Nan en ExonicFunc.refGene:',pd.isna(df['ExonicFunc.refGene']).sum())
+####!!!!!    df['FUNCTION_t']=modelo_varias_variables(variables,df,modelo_reg_logistica)
     df['FUNCTION_t']=modelo_varias_variables(variables,df,modelo_reg_lineal)
     #!#! print('Nan en FUNCTION_t:',pd.isna(df['FUNCTION_t']).sum())
 
