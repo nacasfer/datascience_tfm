@@ -27,15 +27,15 @@ all_files = glob.glob("csv/*.txt")
 li = []
 for filename in all_files:
     print('Loading file',filename)
-    df = pd.read_csv(filename,  header=0, sep='\t',dtype={'causal': 'bool',
-                                    'SIFT_score':'float',
-                                    'Polyphen2_HDIV_score':'float','Polyphen2_HVAR_score':'float',
-                                    'MutationTaster_score':'float','PROVEAN_score':'float','CADD_phred':'float',
-                                    'phyloP20way_mammalian':'float',
-                                    'SiPhy_29way_logOdds':'float',
-                                    'FATHMM_score':'float',
-                                    'gnomAD_genome_ALL':'float','1000g2015aug_all':'float','1000G_ALL':'float',
-                                    'ExAC_ALL':'float','AF':'float','PopFreqMax':'float','alelos':'float',
+    df = pd.read_csv(filename,  header=0, sep='\t',dtype={'causal': 'str',
+                                    'SIFT_score':'str',
+                                    'Polyphen2_HDIV_score':'str','Polyphen2_HVAR_score':'str',
+                                    'MutationTaster_score':'str','PROVEAN_score':'str','CADD_phred':'str',
+                                    'phyloP20way_mammalian':'str','5000Exomes':'str',
+                                    'SiPhy_29way_logOdds':'str',
+                                    'FATHMM_score':'str',
+                                    'gnomAD_genome_ALL':'str','1000g2015aug_all':'str','1000G_ALL':'str',
+                                    'ExAC_ALL':'str','AF':'str','PopFreqMax':'str','alelos':'str',
                                     'allele_coverage':'str','Alt_Annovar':'str','Alt_IR':'str','avsnp147':'str','Chr':'str','clinvar':'str','CLNSIG':'str','ExonicFunc.ensGene':'str','ExonicFunc.refGene':'str'
                                     ,'FATHMM':'str','Func.ensGene':'str','Func.refGene':'str','function':'str','gene':'str','genotype':'str','grantham':'str','ljb23_sift':'str'
                                     ,'maf':'str','phylop':'str','polyphen':'str','Ref':'str','sift':'str','Start':'str'},
