@@ -166,15 +166,26 @@ tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y
 
 # Decission Tree 
 print('\nTraining Decission Tree Model with imbalanced class (original set)')  
+modelo, result=mdl.modelo_DecTree(variantes_Nan_transformed,'imbalanced')
 
-
+y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
+tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
+print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
+print('Recall:',result['test_recall'])
+print('Accuracy:',result['test_accuracy'])
+print('Precision:',result['test_precision'])
 
 
 # Decission Tree
 print('\nTraining Decission Tree Model with balanced class set')                                                        
-                                                                     
-                                                                     
-#confusion_matrix(y_test, y_pred)
+modelo, result=mdl.modelo_DecTree(variantes_Nan_transformed_SMOTEnc,'imbalanced')
+
+y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
+tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
+print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
+print('Recall:',result['test_recall'])
+print('Accuracy:',result['test_accuracy'])
+print('Precision:',result['test_precision'])
 
 
 

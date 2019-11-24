@@ -7,11 +7,12 @@
 ## --   Modulos -- ##
 
 import random
+import numpy as np
 from sklearn.naive_bayes import BernoulliNB
 import pickle                                                       
 from sklearn.model_selection import cross_validate          
 from sklearn.metrics import make_scorer,accuracy_score, precision_score, recall_score
-from sklearn.tree import DecisionTreeClasifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 
 
@@ -46,18 +47,30 @@ def modelo_bernouilli(percent,df,typeMod):
 
     return clf, result
     
-                                          
+                        
 def modelo_DecTree(df,typeMod):
     ''' Modelo basado en un decision tree ''' 
-    DTclf=DecisionTreeClasifier()
+    X = df.copy()
+    X=X.drop(columns=['causal'])
+    y=df['causal'].copy()
     
+    # Hacemos GridSearch para conocer las metricas resultantes
+    grid=len(list(df))+1
+    result=GridSearchCV(DecisionTreeClassifier(), param_grid={'max_depth':np.arange(2,grid)},
+                        cv=10,scoring='recall')
+    
+    result.fit(X,y)
     # Guardamos el modelo
     filename = '../MLmodel/'+ typeMod +'DecTree-model.sav'
-    pickle.dump(DTclf, open(filename, 'wb')) 
+    pickle.dump(result, open(filename, 'wb')) 
 
-    # Hacemos GridSearch para conocer las metricas resultantes
-    result=GridSearchCV
+    result_fin=cross_validate(result,X,y,cv=10,scoring=scoring)
+    # Devolvemos el modelo entrenado,el valor del coef de regresion, el valor de MSE y el de RMSE 
+    for key in result_fin.keys():
+        result_fin[key]=result_fin[key].mean()
+
+    return result, result_fin
     
-
-
-
+    
+    
+    return result
