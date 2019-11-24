@@ -115,7 +115,7 @@ def modelo_varias_variables(variables,df,mod):
         modelo, reg_coef, MSE, RMSE=mod(df2[[principal]],df2[str(var1)])    
         
         # Guardamos el modelo
-        filename = '../MLmodel/'+str(principal)+'-'+str(var1)+'-modelo.sav'
+        filename = '../MLmodel/'+str(principal)+'-'+str(var1)+'-model.sav'
         pickle.dump(modelo, open(filename, 'wb'))     
             
         #modelo, reg_coef, MSE, RMSE=modelo_reg_lineal(df2[[principal]],df2[str(var1)])    

@@ -105,7 +105,8 @@ def formato_datos_origen(variantes_DF):
     
     # Transformamos cadenas str en numericos ordinales segun tabla de equivalencias. Cuando haya dos campos juntos afectando una variante se toma el campo de mayor grado
     #           Func.refGene y Func.ensGene son equivlentes. se rellena una a partir de la otra y se borra
-    dic={'':float('NaN'),'nan':float('NaN'),'exonic':6.,'splicing':6.,'ncRNA':5.,'UTR5':4.,'UTR3':4.,'intronic':3.,'upstream':2.,'downstream':2.,'intergenic':1.}
+    dic={'':float('NaN'),'nan':float('NaN'),'exonic':6.,'splicing':6.,'ncRNA':5.,'UTR5':4.,'UTR3':4.,
+         'intronic':3.,'upstream':2.,'downstream':2.,'intergenic':1.}
     
     variantes_DF['Func.refGene']=variantes_DF['Func.refGene'].str.replace(';',',').str.replace('_',',')
     variantes_DF['Func.refGene']=[categoria_por_valor(str(row).split(',') ,dic)  for row in variantes_DF['Func.refGene'] ] 
@@ -188,12 +189,10 @@ def formato_datos_origen(variantes_DF):
     variantes_DF['phylop']=(variantes_DF['phylop'] +20)/50
     variantes_DF['grantham']=(variantes_DF['grantham']-5)/ 215
 
-
-
     # Rellenamos la columna 'genotype' segun Homo/Heterocigotos. Conteo del num de alelos alt. Homoz ref=0, Heteroz= 1, Homoz alt=2.
     variantes_DF['genotype']=[formateo_allele(str(row),i,variantes_DF)  for i,row in enumerate(variantes_DF['genotype']) ] 
-
-
+    variantes_DF['genotype']=variantes_DF['genotype'].astype('category')
+    
 
 
     return variantes_DF

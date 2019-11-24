@@ -8,16 +8,16 @@
 
 import pandas as pd
 import pickle
-import Training.dataformat as dfmt
+import Train.dataformat as dfmt
 import glob
 import numpy as np
-import Training.estatistics as est
-import Training.filtradoVariantes as flt
+import Train.estatistics as est
+import Train.filtradoVariantes as flt
 
 
 ## --  Parametros globales -- ##
 
-path='/media/natalia/DATOS/DATA/Natalia/ML/DATOS/parapredecir'
+path='../DATOS/parapredecir'
 header=0
 fields=['Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype','maf','gene',
         'SIFT_score','ljb23_sift','sift','Polyphen2_HDIV_score',
@@ -36,7 +36,7 @@ def aplica_modelos_fillNaN(variables,df):
     principal=str(variables[0])
     for var1 in variables[1:]:
         
-        filename = 'MLmodel/'+str(principal)+'-'+str(var1)+'-modelo.sav'
+        filename = 'MLmodel/'+str(principal)+'-'+str(var1)+'-model.sav'
         loaded_model = pickle.load(open(filename, 'rb'))
         df[principal]=[loaded_model.predict([[df.loc[i,str(var1)]]])[0] if (str(row) in ['nan','']) & (np.isfinite(df.loc[i,str(var1)])) else est.vale_valor(row) for  i,row in enumerate(df[principal])] 
         return df[principal]
@@ -53,10 +53,12 @@ for filename in all_files:
                                      decimal=',', usecols=fields,low_memory=False)
     
     ### -- Formateo de los datos
+    print ('Data format processing')
     variantes_DF=dfmt.formato_datos_origen(variantes_DF)
     
     
     ### -- Filling NaN: Aplicacion modelos (ojo, la lista de variables debe tener el indice en el mismo orden en que fueron entrendas!!)
+    print('Filling NaN')
     variantes_DF['FRECUENCIA_t']=aplica_modelos_fillNaN(['maf','5000Exomes'],variantes_DF)     
     variantes_DF['POBLACION_t']=aplica_modelos_fillNaN(['1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax'],variantes_DF)    
     variantes_DF['SIFT_previo']=aplica_modelos_fillNaN(['SIFT_score','sift','ljb23_sift'],variantes_DF)    
@@ -75,24 +77,27 @@ for filename in all_files:
 
 
     ### Eliminamos columnas sobrantes
-    variantes_DF=variantes_DF.drop(columns=['maf','5000Exomes','1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax','SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score', 'Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred', 'phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds','ExonicFunc.refGene', 'function'])
+    variantes_DF=variantes_DF.drop(columns=['maf','5000Exomes','alelos','1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax','SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score', 'Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred', 'phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds','ExonicFunc.refGene', 'function'])
 
     variantes_DF['Func.refGene']=variantes_DF['Func.refGene'].astype('category')
     variantes_DF['FUNCTION_t']=variantes_DF['FUNCTION_t'].astype('category')      
     variantes_DF['clinvar']=variantes_DF['clinvar'].astype('category')
 
-
-
+    ### Filtrado de variantes que no interesan
+    print('Filtering Non-causal variants')
     variantes_DF=flt.filtradoVariantes(variantes_DF)
     
     
-    print(list(variantes_DF))
+
+    print(variantes_DF.dtypes)
     
     
     
     
-    
-    
+    ## Para modelo naive
+#    varss=variantes_Nan_transformed.copy()
+#    varss=varss.drop(columns=['causal'])
+#    print(clf.predict(varss)) 
     
     
     
