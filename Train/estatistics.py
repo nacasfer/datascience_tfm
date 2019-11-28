@@ -214,8 +214,8 @@ def relleno_y_reduccion(df):
     ### Eliminamos columnas sobrantes
     df=df.drop(columns=['maf','5000Exomes',
              '1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax',
-             'SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score',
-             'Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred',
+             'SIFT_score','sift','ljb23_sift','SIFT_previo',
+             'Polyphen2_HDIV_score','Polyphen2_HVAR_score',
              'phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds',
              'ExonicFunc.refGene', 'function'])
 

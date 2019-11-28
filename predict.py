@@ -77,7 +77,13 @@ for filename in all_files:
 
 
     ### Eliminamos columnas sobrantes
-    variantes_DF=variantes_DF.drop(columns=['maf','5000Exomes','alelos','1000G_ALL','1000g2015aug_all','gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax','SIFT_score','sift','ljb23_sift','SIFT_previo','PROVEAN_score', 'Polyphen2_HDIV_score','Polyphen2_HVAR_score','CADD_phred', 'phyloP20way_mammalian','FATHMM','FATHMM_score','SiPhy_29way_logOdds','ExonicFunc.refGene', 'function'])
+    variantes_DF=variantes_DF.drop(columns=['maf','5000Exomes','alelos','1000G_ALL','1000g2015aug_all',
+                                            'gnomAD_genome_ALL','AF','ExAC_ALL','PopFreqMax','SIFT_score',
+                                            'sift','ljb23_sift','SIFT_previo', 'Polyphen2_HDIV_score',
+                                            'Polyphen2_HVAR_score', 'phyloP20way_mammalian','FATHMM',
+                                            'FATHMM_score','SiPhy_29way_logOdds','ExonicFunc.refGene', 
+                                            'function'])
+
 
     variantes_DF['Func.refGene']=variantes_DF['Func.refGene'].astype('category')
     variantes_DF['FUNCTION_t']=variantes_DF['FUNCTION_t'].astype('category')      

@@ -6,7 +6,7 @@
 
 ## --   Modulos -- ##
 import sys
-
+import numpy as np
 
 ## --  Funciones -- ##
 
@@ -197,8 +197,27 @@ def formato_datos_origen(variantes_DF):
 
     return variantes_DF
 
-
-
+def transformation_NaN  (df):
+    df['polyphen'] = df['polyphen'].replace(np.nan, -1)
+    df['genotype'] = df['genotype'].replace(np.nan, -1)
+    df['genotype']=df['genotype'].astype('float64')
+    df['Func.refGene'] = df['Func.refGene'].replace(np.nan, -1)
+    df['Func.refGene']=df['Func.refGene'].astype('float64')
+    df['MutationTaster_score'] = df['MutationTaster_score'].replace(np.nan, -1)
+    df['grantham'] = df['grantham'].replace(np.nan, -1)
+    df['clinvar'] = df['clinvar'].replace(np.nan, -1)
+    df['clinvar']=df['clinvar'].astype('float64')
+    df['phylop'] = df['phylop'].replace(np.nan, -1)
+    df['FRECUENCIA_t'] = df['FRECUENCIA_t'].replace(np.nan, -1)
+    df['POBLACION_t'] = df['POBLACION_t'].replace(np.nan, -1)
+    df['SIFT_t'] = df['SIFT_t'].replace(np.nan, -1)
+    df['POLYPHEN_t'] = df['POLYPHEN_t'].replace(np.nan, -1)
+    df['PHYLOP_t'] = df['PHYLOP_t'].replace(np.nan, -1)
+    df['FUNCTION_t'] = df['FUNCTION_t'].replace(np.nan, -1)
+    df['FUNCTION_t']=df['FUNCTION_t'].astype('float64')
+    df['CADD_phred'] = df['CADD_phred'].replace(np.nan, -1)
+    df['PROVEAN_score'] = df['PROVEAN_score'].replace(np.nan, -1)    
+    return df
 
 
 

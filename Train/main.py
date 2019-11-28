@@ -30,7 +30,7 @@ fields=['causal','Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype
         'ExAC_ALL','AF','PopFreqMax','alelos']
       
 random.seed(7)
-
+pathTest='../../DATOS/TestCausalVariants.txt'
 
 ## --  Funciones -- ##
 
@@ -44,6 +44,14 @@ def aplica_SMOTENC(df):
     X_resampled = pd.DataFrame(X_resampled, columns=X.columns)
     X_resampled['causal']=y_resampled
     return X_resampled
+
+
+def Conf_Mat(x,y,result):
+    tn, fp, fn, tp = confusion_matrix(x, y).ravel()
+    print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
+    print('Recall:',result['test_recall'].mean())
+    print('Accuracy:',result['test_accuracy'].mean())
+    print('Precision:',result['test_precision'].mean())
 
 
 ###
@@ -107,28 +115,13 @@ variantes_DF=pd.read_csv('variantesDF.txt' , sep='\t',
 ### -- Aumento de la proporcion de eventos exito (variantes causales = 1): Sustituyendo por NaN -1
 print('Upsampling')
 # Eliminamos columnas tipo string
-variantes_DF=variantes_DF.drop(columns=['Chr','Start','Ref','Alt_Annovar','Alt_IR','alelos','avsnp147','gene','allele_coverage'])
+variantes_DF=variantes_DF.drop(columns=['Chr','Start','Ref','Alt_Annovar','Alt_IR','alelos','avsnp147',
+                                        'gene','allele_coverage'])
 
 # Generamos set datos donde NAn = -1
 #!#! print('\nNon causal variants before dealing NaN: %d \nCausal variants: %d'% (variantes_DF.causal.value_counts()[0],variantes_DF.causal.value_counts()[1]))
-variantes_Nan_transformed=variantes_DF.copy()
-variantes_Nan_transformed['polyphen'] = variantes_Nan_transformed['polyphen'].replace(np.nan, -1)
-variantes_Nan_transformed['genotype'] = variantes_Nan_transformed['genotype'].replace(np.nan, -1)
-variantes_Nan_transformed['genotype']=variantes_Nan_transformed['genotype'].astype('float64')
-variantes_Nan_transformed['Func.refGene'] = variantes_Nan_transformed['Func.refGene'].replace(np.nan, -1)
-variantes_Nan_transformed['Func.refGene']=variantes_Nan_transformed['Func.refGene'].astype('float64')
-variantes_Nan_transformed['MutationTaster_score'] = variantes_Nan_transformed['MutationTaster_score'].replace(np.nan, -1)
-variantes_Nan_transformed['grantham'] = variantes_Nan_transformed['grantham'].replace(np.nan, -1)
-variantes_Nan_transformed['clinvar'] = variantes_Nan_transformed['clinvar'].replace(np.nan, -1)
-variantes_Nan_transformed['clinvar']=variantes_Nan_transformed['clinvar'].astype('float64')
-variantes_Nan_transformed['phylop'] = variantes_Nan_transformed['phylop'].replace(np.nan, -1)
-variantes_Nan_transformed['FRECUENCIA_t'] = variantes_Nan_transformed['FRECUENCIA_t'].replace(np.nan, -1)
-variantes_Nan_transformed['POBLACION_t'] = variantes_Nan_transformed['POBLACION_t'].replace(np.nan, -1)
-variantes_Nan_transformed['SIFT_t'] = variantes_Nan_transformed['SIFT_t'].replace(np.nan, -1)
-variantes_Nan_transformed['POLYPHEN_t'] = variantes_Nan_transformed['POLYPHEN_t'].replace(np.nan, -1)
-variantes_Nan_transformed['PHYLOP_t'] = variantes_Nan_transformed['PHYLOP_t'].replace(np.nan, -1)
-variantes_Nan_transformed['FUNCTION_t'] = variantes_Nan_transformed['FUNCTION_t'].replace(np.nan, -1)
-variantes_Nan_transformed['FUNCTION_t']=variantes_Nan_transformed['FUNCTION_t'].astype('float64')
+variantes_Nan_transformed=dfmt.transformation_NaN(variantes_DF.copy())
+
 #!#! print('\nNon causal variants after NaN transformation: %d \nCausal variants: %d'% (variantes_Nan_transformed.causal.value_counts()[0],variantes_Nan_transformed.causal.value_counts()[1]))
 
 # Aplicamos SMOTE
@@ -140,59 +133,101 @@ variantes_Nan_transformed_SMOTEnc=aplica_SMOTENC(variantes_Nan_transformed)
 ### -- Entrenamos los modelos de clasificacion
 
 # Naive con set original (nan==-1)
-print('\nTraining Naive Model with imbalanced class (original set)')
-percent=variantes_DF.causal.value_counts()[1]/((variantes_DF.causal.value_counts()[1]+variantes_DF.causal.value_counts()[0])*100)
-modelo, result=mdl.modelo_bernouilli(percent ,variantes_Nan_transformed,'imbalanced')
+##!@@ print('\nTraining Naive Model with imbalanced class (original set)')
+##!@@ percent=variantes_DF.causal.value_counts()[1]/((variantes_DF.causal.value_counts()[1]+variantes_DF.causal.value_counts()[0])*100)
+##!@@ modelo, result=mdl.modelo_bernouilli(percent ,variantes_Nan_transformed,'imbalanced')
 
-y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
-tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
-#!#! print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-#!#! print('Recall:',result['test_recall'])
-#!#! print('Accuracy:',result['test_accuracy'])
-#!#! print('Precision:',result['test_precision'])
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed['causal'], y_predict,result)
 
 
 # Naive con set_SMOTE 
-print('\nTraining Naive Model with balanced class set')                                          
-modelo, result=mdl.modelo_bernouilli(0.5,variantes_Nan_transformed_SMOTEnc,'balanced')
+##!@@ print('\nTraining Naive Model with balanced class set')                                          
+##!@@ modelo, result=mdl.modelo_bernouilli(0.5,variantes_Nan_transformed_SMOTEnc,'balanced')
 
-y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
-tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
-#!#! print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-#!#! print('Recall:',result['test_recall'])
-#!#! print('Accuracy:',result['test_accuracy'])
-#!#! print('Precision:',result['test_precision'])
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
 
 
-# Decission Tree 
-print('\nTraining Decission Tree Model with imbalanced class (original set)')  
-modelo, result=mdl.modelo_DecTree(variantes_Nan_transformed,'imbalanced')
+# Decission Tree  con set original (nan==-1)
+##!@@ print('\nTraining Decission Tree Model with imbalanced class (original set)') 
+##!@@ modelo, result=mdl.modelo_arbol(variantes_Nan_transformed,'dectree','imbalanced')
 
-y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
-tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
-print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-print('Recall:',result['test_recall'])
-print('Accuracy:',result['test_accuracy'])
-print('Precision:',result['test_precision'])
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed['causal'], y_predict,result)
 
 
-# Decission Tree
-print('\nTraining Decission Tree Model with balanced class set')                                                        
-modelo, result=mdl.modelo_DecTree(variantes_Nan_transformed_SMOTEnc,'imbalanced')
+# Decission Tree con set_SMOTE 
+##!@@ print('\nTraining Decission Tree Model with balanced class set')  
+##!@@ modelo, result=mdl.modelo_arbol(variantes_Nan_transformed_SMOTEnc,'dectree','balanced')  
 
-y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
-tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
-print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-print('Recall:',result['test_recall'])
-print('Accuracy:',result['test_accuracy'])
-print('Precision:',result['test_precision'])
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
+
+
+# Gradient Boosted Trees con set original (nan==-1)
+##!@@ print('\nGradient Boosted Trees Model with imbalanced class (original set)')  
+##!@@ modelo, result=mdl.modelo_arbol(variantes_Nan_transformed,'gradboost','imbalanced')
+
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed['causal'], y_predict,result)
 
 
 
+# Random Forest con set_SMOTE 
+##!@@ print('\nGradient Boosted Trees Model with balanced class set')      
+##!@@ modelo, result=mdl.modelo_arbol(variantes_Nan_transformed_SMOTEnc,'gradboost','balanced')                                                  
+
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
+##!@@ Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
 
 
 
 
 
 
+# Convolutional Neural Network con set original (nan==-1)
+#print('\nCNN Model with balanced class set')      
+#modelo,result=mdl.modelo_CNN2(variantes_Nan_transformed)                                                  
 
+#y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
+#Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
+
+
+print ("pprobasdo")
+
+
+
+
+
+print('LONGTOTAL',len(variantes_Nan_transformed_SMOTEnc))
+
+from sklearn.model_selection import StratifiedKFold
+
+def cross_validation_split(df, folds):
+
+    X = df.copy()
+    X=X.drop(columns=['causal'])
+    y=df['causal'].copy()
+
+    skf = StratifiedKFold(n_splits=folds)
+    i=0
+    for train_index, test_index in skf.split(X, y):
+        # specific ".loc" syntax for working with dataframes
+        x_train, x_test = X.loc[train_index], X.loc[test_index]
+        y_train, y_test = y[train_index], y[test_index]    
+        
+        x_train.to_csv(str(i)+'_Train.txt', sep='\t', index = False)
+        i=i+1
+
+
+
+
+dt=cross_validation_split(variantes_Nan_transformed_SMOTEnc,10)
+
+
+
+
+#y_predict= model.predict(X)
+#tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
+#print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
