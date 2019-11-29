@@ -81,24 +81,25 @@ def modelo_arbol(df,typeMod,typeData):
     # Devolvemos el modelo entrenado,y metricas de accuracy, precision y recall 
     return result, result_fin   
 
-
 def recall_m(y_true, y_pred):
-        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-        recall = true_positives / (possible_positives + K.epsilon())
-        return recall
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
 
 def precision_m(y_true, y_pred):
-        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-        precision = true_positives / (predicted_positives + K.epsilon())
-        return precision
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
     
-def modelo_CNN(df):
+def modelo_CNN(df,typemod):
     ''' Modelo basado en Red neuronal''' 
     X = df.copy()
     X=X.drop(columns=['causal'])
     y=df['causal'].copy()
+   
     
     model = Sequential()
     model.add(Reshape((1,X.shape[1],1)))
@@ -122,15 +123,15 @@ def modelo_CNN(df):
 
     model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['binary_accuracy',precision_m, recall_m])
-         
-    history=model.fit(np.array(X), np.array(y), nb_epoch=2000, 
+        
+    history=model.fit(np.array(X), np.array(y), nb_epoch=2, 
           validation_data=(np.array(X), np.array(y)))
 
-    plt_CNN(history,np.array(X), np.array(y))
+    ##!@@ plt_CNN(history,np.array(X), np.array(y))
     # Guardamos el modelo
-    filename = '../MLmodel/CNN-model.sav'
+    filename = '../MLmodel/'+typemod+'_CNN-model.sav'
     pickle.dump(model, open(filename, 'wb')) 
-    
+
     return model
 
 

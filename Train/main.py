@@ -181,20 +181,27 @@ variantes_Nan_transformed_SMOTEnc=aplica_SMOTENC(variantes_Nan_transformed)
 ##!@@ Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
 
 
+# Convolutional Neural Network con set original (nan==-1)
+##!@@ print('\nCNN Model with imbalanced class (original set)')      
+##!@@ modelo=mdl.modelo_CNN(variantes_Nan_transformed,'imbalanced' )
+##!@@ y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal'])).round()
 
+##!@@ tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
+##!@@ print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
+##!@@ mdl.metricas_CNN(variantes_Nan_transformed,modelo)
 
 
 # Convolutional Neural Network con set_SMOTE
 print('\nCNN Model with balanced class set')      
-modelo=mdl.modelo_CNN(variantes_Nan_transformed_SMOTEnc )
+modelo=mdl.modelo_CNN(variantes_Nan_transformed_SMOTEnc,'balanced' )
 y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal'])).round()
-
-print(y_predict)
-mdl.metricas_CNN(variantes_Nan_transformed_SMOTEnc,modelo)
 
 tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
 print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
+#mdl.metricas_CNN(variantes_Nan_transformed_SMOTEnc,modelo)
 
 
-
+from sklearn.metrics import classification_report
+y_pred_bool = np.argmax(y_predict, axis=1)
+print(classification_report(variantes_Nan_transformed_SMOTEnc['causal'], y_pred_bool))
 

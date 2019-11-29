@@ -17,7 +17,7 @@ from sklearn.metrics import confusion_matrix
 
 ## --  Parametros globales -- ##
 
-path='../DATOS/Exomas'
+path='../DATOS/Validacion'
 header=0
 fields=['Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','genotype','maf','gene','causal',
         'SIFT_score','ljb23_sift','sift','Polyphen2_HDIV_score',
@@ -40,6 +40,7 @@ def aplica_modelos_fillNaN(variables,df):
         loaded_model = pickle.load(open(filename, 'rb'))
         df[principal]=[loaded_model.predict([[df.loc[i,str(var1)]]])[0] if (str(row) in ['nan','']) & (np.isfinite(df.loc[i,str(var1)])) else est.vale_valor(row) for  i,row in enumerate(df[principal])] 
         return df[principal]
+
 
 ###
 ### -- Lectura del archivo de variantes
@@ -98,9 +99,9 @@ for filename in all_files:
 
     ### Filtrado de variantes que no interesan
     print('Filtering Non-causal variants')
-    print('Number of variants before filtering', len(variantes_DF))
- #   variantes_DF=flt.filtradoVariantes(variantes_DF)
-    print('Number of variants after filtering', len(variantes_DF))    
+    ##!@@ print('Number of variants before filtering', len(variantes_DF))
+    ##!@@ variantes_DF=flt.filtradoVariantes(variantes_DF)
+    ##!@@ print('Number of variants after filtering', len(variantes_DF))    
 
     
     ###
@@ -116,8 +117,8 @@ for filename in all_files:
     balancedDT = pickle.load(open('MLmodel/balancedDecTree-model.sav', 'rb'))
     imbalancedGB = pickle.load(open('MLmodel/imbalanced_gradboost-model.sav', 'rb'))
     balancedGB = pickle.load(open('MLmodel/balanced_gradboost-model.sav', 'rb'))  
-    
-
+ #   imbalancedCNN = pickle.load(open('MLmodel/imbalanced_CNN-model.sav', 'rb'))
+    balancedCNN = pickle.load(open('MLmodel/balanced_CNN-model.sav', 'rb'))
 
 
     print(variantes_Nan_transformed.causal.value_counts())
@@ -154,28 +155,22 @@ for filename in all_files:
     tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
     print ('Confusion matrix:\n TP: %d \t\t  FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )  
     
+    print('\nImbalanced CNN model')      
+  #  y_predict=imbalancedCNN.predict(variantes_Nan_transformed.drop(columns=['causal','allele_coverage','Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','gene'])).round()
+  #  tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
+    print ('Confusion matrix:\n TP: %d \t\t  FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )  
     
-    
-
-    
-    
-      
-    
-    
-    
-    
-    ## Para modelo naive
-#    varss=variantes_Nan_transformed.copy()
-#    varss=varss.drop(columns=['causal'])
-#    print(clf.predict(varss)) 
-    
-    
-    
-    
-    
+    print('\nBalanced CNN model')  
 
 
 
 
 
 
+    
+    y_predict=balancedCNN.predict(variantes_Nan_transformed.drop(columns=['causal','allele_coverage','Chr','Start','Ref','Alt_Annovar','Alt_IR','avsnp147','gene'])).round()
+    tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
+    print ('Confusion matrix:\n TP: %d \t\t  FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )  
+
+     
+    
