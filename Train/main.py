@@ -173,8 +173,7 @@ variantes_Nan_transformed_SMOTEnc=aplica_SMOTENC(variantes_Nan_transformed)
 ##!@@ Conf_Mat(variantes_Nan_transformed['causal'], y_predict,result)
 
 
-
-# Random Forest con set_SMOTE 
+# Gradient Boosted con set_SMOTE 
 ##!@@ print('\nGradient Boosted Trees Model with balanced class set')      
 ##!@@ modelo, result=mdl.modelo_arbol(variantes_Nan_transformed_SMOTEnc,'gradboost','balanced')                                                  
 
@@ -185,49 +184,17 @@ variantes_Nan_transformed_SMOTEnc=aplica_SMOTENC(variantes_Nan_transformed)
 
 
 
+# Convolutional Neural Network con set_SMOTE
+print('\nCNN Model with balanced class set')      
+modelo=mdl.modelo_CNN(variantes_Nan_transformed_SMOTEnc )
+y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal'])).round()
 
-# Convolutional Neural Network con set original (nan==-1)
-#print('\nCNN Model with balanced class set')      
-#modelo,result=mdl.modelo_CNN2(variantes_Nan_transformed)                                                  
+print(y_predict)
+mdl.metricas_CNN(variantes_Nan_transformed_SMOTEnc,modelo)
 
-#y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal']))
-#Conf_Mat(variantes_Nan_transformed_SMOTEnc['causal'], y_predict,result)
-
-
-print ("pprobasdo")
-
-
-
-
-
-print('LONGTOTAL',len(variantes_Nan_transformed_SMOTEnc))
-
-from sklearn.model_selection import StratifiedKFold
-
-def cross_validation_split(df, folds):
-
-    X = df.copy()
-    X=X.drop(columns=['causal'])
-    y=df['causal'].copy()
-
-    skf = StratifiedKFold(n_splits=folds)
-    i=0
-    for train_index, test_index in skf.split(X, y):
-        # specific ".loc" syntax for working with dataframes
-        x_train, x_test = X.loc[train_index], X.loc[test_index]
-        y_train, y_test = y[train_index], y[test_index]    
-        
-        x_train.to_csv(str(i)+'_Train.txt', sep='\t', index = False)
-        i=i+1
+tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
+print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
 
 
 
 
-dt=cross_validation_split(variantes_Nan_transformed_SMOTEnc,10)
-
-
-
-
-#y_predict= model.predict(X)
-#tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
-#print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
