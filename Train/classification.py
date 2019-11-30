@@ -124,7 +124,7 @@ def modelo_CNN(df,typemod):
     model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['binary_accuracy',precision_m, recall_m])
         
-    history=model.fit(np.array(X), np.array(y), nb_epoch=2, 
+    history=model.fit(np.array(X), np.array(y), nb_epoch=1000, 
           validation_data=(np.array(X), np.array(y)))
 
     ##!@@ plt_CNN(history,np.array(X), np.array(y))
