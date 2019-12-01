@@ -55,7 +55,7 @@ Filling NaN values is strongly necessary for corret predictions. In this case, N
 ---
 <a name="clustering"></a>
 ## Clustering
-Several models are avaiables at `predict-py` script. For not using all just coment de non-selected ones in the code. Otherwise, all the predictions will be storage on a new folder with the name of the model and the name of the sample.
+Several models are avaiables at `predict.py` script. For not using all just coment de non-selected ones in the code. Otherwise, all the predictions will be storage on a new folder with the name of the model and the name of the sample.
 
 ---
 
