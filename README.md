@@ -7,9 +7,9 @@ Currently work have been presented as the final project to DataScience master de
 * [Manual pages](#manual)
 * [Some considerations before start](#before)
 * [Installation and requirements](#install)
-* [Filling NaN's: Analisys of the relation between variables](#relation)
+* [Filling NaN's: Analisys of the relation between variables](#nan)
 * [Clustering](#cluster)
-* [Final prioritization](#prioritization)
+* [Final considerations](#final)
 
 ---
 <a name="manual"></a>
@@ -48,7 +48,7 @@ Aligment, varint calling and variant VCF annotation steps were perform with foll
 
 
 ---
-<a name="relation"></a>
+<a name="nan"></a>
 ## Filling NaN's: Analysis of the relation between variables
 Filling NaN values is strongly necessary for corret predictions. In this case, NaN values of one feature are filled throug linear, logaritmic and logistic regresion with other features. These models are availables in the "MLmodel" folder, downloadble by cloning this repository. Models are automaticaly appied by using `predict.py` script.
 
@@ -59,7 +59,7 @@ Several models are avaiables at `predict-py` script. For not using all just come
 
 ---
 
-<a name="prioritization"></a>
+<a name="final"></a>
 ## Final considerations
 Currently model is ready to use throug the instruction below. Just change the path of the folder to make the predictions, or crate one as instructions. 
 
