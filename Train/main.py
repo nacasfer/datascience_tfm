@@ -174,7 +174,7 @@ y_predict=modelo.predict(variantes_Nan_transformed.drop(columns=['causal'])).rou
 
 tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed['causal'], y_predict).ravel()
 print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-#mdl.metricas_CNN(variantes_Nan_transformed,modelo)
+mdl.metricas_CNN(variantes_Nan_transformed,modelo)
 
 
 # Convolutional Neural Network con set_SMOTE
@@ -184,7 +184,7 @@ y_predict=modelo.predict(variantes_Nan_transformed_SMOTEnc.drop(columns=['causal
 
 tn, fp, fn, tp = confusion_matrix(variantes_Nan_transformed_SMOTEnc['causal'], y_predict).ravel()
 print ('Confusion matrix:\n TP: %d \t FN: %d \n FP: %d \t TN: %d'% (tp,fn,fp,tn) )
-#!#! mdl.metricas_CNN(variantes_Nan_transformed_SMOTEnc,modelo)
+mdl.metricas_CNN(variantes_Nan_transformed_SMOTEnc,modelo)
 
 
 #!#! from sklearn.metrics import classification_report
