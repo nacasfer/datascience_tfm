@@ -50,15 +50,27 @@ Aligment, varint calling and variant VCF annotation steps were perform with foll
 ---
 <a name="relation"></a>
 ## Filling NaN's: Analysis of the relation between variables
-
+Filling NaN values is strongly necessary for corret predictions. In this case, NaN values of one feature are filled throug linear, logaritmic and logistic regresion with other features. These models are availables in the "MLmodel" folder, downloadble by cloning this repository. Models are automaticaly appied by using `predict.py` script.
 
 ---
 <a name="clustering"></a>
 ## Clustering
-
+Several models are avaiables at `predict-py` script. For not using all just coment de non-selected ones in the code. Otherwise, all the predictions will be storage on a new folder with the name of the model and the name of the sample.
 
 ---
 
 <a name="prioritization"></a>
-## Final prioritization
+## Final considerations
+Currently model is ready to use throug the instruction below. Just change the path of the folder to make the predictions, or crate one as instructions. 
 
+```bash
+python3 predict.py
+```
+If you wish to train models with your own data, just create a main dataset using the  `TrainDataFormat.py` script and run the  `main.py` script as follows. Remember set the correct path.
+```bash
+python3 main.py
+```
+For validation, set the correct path to not-trained data and run the `Comp_w_Test.py` as follows.
+```bash
+python3 Comp_w_Test.py
+```
