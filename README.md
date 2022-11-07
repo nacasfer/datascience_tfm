@@ -1,6 +1,6 @@
 # datascience_tfm
 
-Currently work have been presented as the final project to DataScience master degree.
+Currently work have been presented as the first approach to a future propperly DataScience model.
 
 
 ##### Table of contents
